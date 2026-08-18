@@ -427,6 +427,7 @@ section{position:relative;z-index:1;}
 
 /* ---------- overlay / AI processing visualization ---------- */
 .overlay{
+.overlay[hidden]{display:none;}
   position:fixed;inset:0;z-index:200;
   background:rgba(6,5,9,.92);
   backdrop-filter:blur(6px);
