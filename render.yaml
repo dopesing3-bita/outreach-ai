@@ -1,0 +1,21 @@
+# Render Blueprint (render.com/docs/blueprint-spec).
+# You can also just create a Web Service manually in the Render dashboard
+# and point it at this repo — either way you still fill in the secret
+# values yourself in the dashboard (sync: false = "prompt me").
+services:
+  - type: web
+    name: ai-outreach-agent
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /healthz
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_MODEL
+        value: gemini-2.5-flash
+      - key: SNOV_API_USER_ID
+        sync: false
+      - key: SNOV_API_SECRET
+        sync: false

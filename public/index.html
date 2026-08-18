@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Outreach AI — Hiring Manager Outreach Agent</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body class="loading">
+
+<!-- ============ LOADING ============ -->
+<div class="loader" id="loader">
+  <div class="loader-core"></div>
+  <p class="loader-label">INITIALIZING OUTREACH AI</p>
+  <p class="loader-pct" id="loaderPct">00%</p>
+</div>
+
+<canvas id="core-canvas"></canvas>
+<canvas id="bg-canvas"></canvas>
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"><span id="cursorLabel"></span></div>
+
+<header class="topnav">
+  <div class="brand"><span class="brand-mark">◆</span> OUTREACH<span class="brand-thin">AI</span></div>
+  <nav>
+    <a href="#app" data-cursor="OPEN →">Workflow</a>
+    <a href="#how" data-cursor="OPEN →">How it works</a>
+  </nav>
+</header>
+
+<!-- ============ CINEMATIC SCROLL SEQUENCE ============ -->
+<section class="cinema" id="cinema">
+  <div class="cinema-pin" id="cinemaPin">
+
+    <div class="cinema-frame" data-frame="intro">
+      <p class="eyebrow">AI HIRING MANAGER OUTREACH AGENT</p>
+      <h1 class="cinema-title">OUTREACH<span class="accent">AI</span></h1>
+      <p class="cinema-sub">Turn a recruiter's LinkedIn profile into a personalized job application.</p>
+      <div class="scroll-hint"><span></span>Scroll to enter</div>
+    </div>
+
+    <div class="cinema-frame" data-frame="s1">
+      <h2 class="cinema-line">Find the right person.</h2>
+    </div>
+    <div class="cinema-frame" data-frame="s2">
+      <h2 class="cinema-line">Understand their role.</h2>
+    </div>
+    <div class="cinema-frame" data-frame="s3">
+      <h2 class="cinema-line">Tailor your application.</h2>
+    </div>
+    <div class="cinema-frame" data-frame="s4">
+      <h2 class="cinema-line">Reach out.</h2>
+      <a href="#app" class="cta-primary" id="enterAppBtn" data-cursor="START">Start an outreach</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ HOW IT WORKS ============ -->
+<section class="how" id="how">
+  <p class="section-eyebrow">HOW IT WORKS</p>
+  <div class="how-grid">
+    <div class="how-step"><span class="num">01</span><h3>Paste LinkedIn profile</h3><p>The recruiter, hiring manager, or TA contact you want to reach.</p></div>
+    <div class="how-step"><span class="num">02</span><h3>Upload your resume</h3><p>This becomes your master resume — the only source of truth the AI uses.</p></div>
+    <div class="how-step"><span class="num">03</span><h3>We find their contact</h3><p>Snov.io enriches the profile and locates a verified email.</p></div>
+    <div class="how-step"><span class="num">04</span><h3>AI tailors your resume</h3><p>Reorganized and rewritten for this exact role — nothing invented.</p></div>
+    <div class="how-step"><span class="num">05</span><h3>AI writes the email</h3><p>Specific, human, personalized — never generic.</p></div>
+    <div class="how-step"><span class="num">06</span><h3>You open Gmail &amp; send</h3><p>Download your resume, attach it, review, and hit send yourself.</p></div>
+  </div>
+</section>
+
+<!-- ============ APP ============ -->
+<main class="app" id="app">
+
+  <!-- Progress rail -->
+  <ol class="rail" id="rail">
+    <li class="rail-step active" data-step="1">Recruiter</li>
+    <li class="rail-step" data-step="2">Resume</li>
+    <li class="rail-step" data-step="3">Role</li>
+    <li class="rail-step" data-step="4">Outreach</li>
+  </ol>
+
+  <!-- STEP 1: LinkedIn -->
+  <section class="panel" id="panel-1" data-active="true">
+    <p class="panel-eyebrow">STEP 01 — FIND RECRUITER</p>
+    <h2>LinkedIn profile URL</h2>
+    <p class="panel-hint">Recruiter, hiring manager, talent acquisition, or HR contact.</p>
+    <div class="field">
+      <input type="url" id="linkedinUrl" placeholder="https://www.linkedin.com/in/example" data-cursor="ENTER" autocomplete="off" />
+    </div>
+    <button class="cta-primary" id="btnFindRecruiter" data-cursor="START">Analyze Recruiter</button>
+    <p class="error" id="err-1"></p>
+
+    <div class="result-card" id="recruiterCard" hidden>
+      <p class="result-tag ok">RECRUITER FOUND ✓</p>
+      <div class="result-grid">
+        <div><span>Name</span><strong id="rName">—</strong></div>
+        <div><span>Position</span><strong id="rTitle">—</strong></div>
+        <div><span>Company</span><strong id="rCompany">—</strong></div>
+        <div><span>Email</span><strong id="rEmail">—</strong></div>
+      </div>
+      <p class="warn" id="rEmailWarn" hidden>We couldn't find a verified email for this person. You can still generate a resume and email.</p>
+      <button class="cta-secondary" id="btnToResume" data-cursor="NEXT →">Continue</button>
+    </div>
+  </section>
+
+  <!-- STEP 2: Resume -->
+  <section class="panel" id="panel-2">
+    <p class="panel-eyebrow">STEP 02 — YOUR RESUME</p>
+    <h2>Upload your current resume</h2>
+    <p class="panel-hint">PDF or DOCX. This is your master resume — the AI only reorganizes and rewrites what's already here, it never invents.</p>
+    <label class="dropzone" id="dropzone" data-cursor="UPLOAD">
+      <input type="file" id="resumeFile" accept=".pdf,.docx" hidden />
+      <span id="dropzoneLabel">Drop your resume here, or click to browse</span>
+      <span class="dropzone-sub">PDF or DOCX · max 10MB</span>
+    </label>
+    <p class="error" id="err-2"></p>
+    <p class="success" id="resumeSuccess" hidden>Resume received ✓ — ready for ATS tailoring.</p>
+    <button class="cta-primary" id="btnToRole" data-cursor="NEXT →" disabled>Continue</button>
+  </section>
+
+  <!-- STEP 3: Role -->
+  <section class="panel" id="panel-3">
+    <p class="panel-eyebrow">STEP 03 — TARGET ROLE</p>
+    <h2 id="roleHeading">Confirming the opportunity…</h2>
+    <p class="panel-hint" id="roleHint">We'll try to determine the role from the recruiter's profile. If we can't, tell us directly.</p>
+
+    <div class="field" id="roleFields" hidden>
+      <input type="text" id="jobTitle" placeholder="Job title (e.g. Software Engineer)" data-cursor="ENTER" />
+      <textarea id="jobDescription" placeholder="Job description — optional" rows="4" data-cursor="ENTER"></textarea>
+    </div>
+
+    <button class="cta-primary" id="btnGenerate" data-cursor="GENERATE">Generate resume + email</button>
+    <p class="error" id="err-3"></p>
+  </section>
+
+  <!-- STEP 4: Outreach output -->
+  <section class="panel panel-wide" id="panel-4">
+    <p class="panel-eyebrow">STEP 04 — YOUR OUTREACH</p>
+    <h2>Ready to send</h2>
+
+    <div class="outreach-grid">
+      <div class="card">
+        <p class="result-tag ok">TAILORED RESUME ✓</p>
+        <p class="card-sub">Optimized for <strong id="genCompany">—</strong> · <strong id="genRole">—</strong></p>
+        <div class="btn-row">
+          <a class="cta-secondary" id="downloadPdf" data-cursor="↓ PDF">Download PDF</a>
+          <a class="cta-ghost" id="downloadDocx" data-cursor="↓ DOCX">Download DOCX</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <p class="result-tag ok">EMAIL READY ✓</p>
+        <div class="email-preview">
+          <p><span>To</span> <strong id="emailTo">—</strong></p>
+          <p><span>Subject</span> <strong id="emailSubject">—</strong></p>
+          <hr>
+          <p class="email-body" id="emailBody">—</p>
+        </div>
+        <div class="btn-row">
+          <a class="cta-ghost" id="downloadEml" data-cursor="↓ EML">Download Email</a>
+          <a class="cta-primary" id="openGmail" target="_blank" rel="noopener" data-cursor="GMAIL →">Open in Gmail</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="next-steps">
+      <p class="section-eyebrow">NEXT STEP</p>
+      <ul>
+        <li>✓ Download your tailored resume</li>
+        <li>✓ Open Gmail</li>
+        <li>✓ Attach your downloaded resume</li>
+        <li>✓ Review the email</li>
+        <li>✓ Click Send</li>
+      </ul>
+    </div>
+
+    <button class="cta-ghost" id="btnRestart" data-cursor="RESET">Start another outreach</button>
+  </section>
+
+</main>
+
+<!-- Processing overlay -->
+<div class="overlay" id="overlay" hidden>
+  <canvas id="network-canvas"></canvas>
+  <div class="overlay-inner">
+    <p class="overlay-status" id="overlayStatus">Connecting…</p>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <span>Outreach AI · your resume, your review, your send.</span>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

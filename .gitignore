@@ -1,0 +1,32 @@
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Dependencies
+node_modules/
+
+# Uploads / generated artifacts (this app is stateless — nothing should
+# actually land here, but ignore defensively just in case)
+uploads/
+generated/
+tmp/
+
+# Credentials — never commit these under any name
+*.pem
+*.key
+credentials.json
+service-account*.json
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS / editor cruft
+.DS_Store
+.vscode/
+.idea/
+
+# Build output (none currently, but safe to ignore)
+dist/
+build/
