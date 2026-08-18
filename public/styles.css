@@ -427,12 +427,12 @@ section{position:relative;z-index:1;}
 
 /* ---------- overlay / AI processing visualization ---------- */
 .overlay{
-.overlay[hidden]{display:none;}
   position:fixed;inset:0;z-index:200;
   background:rgba(6,5,9,.92);
   backdrop-filter:blur(6px);
   display:flex;align-items:center;justify-content:center;
 }
+.overlay[hidden]{display:none;}
 #network-canvas{position:absolute;inset:0;width:100%;height:100%;}
 .overlay-inner{position:relative;text-align:center;z-index:2;}
 .overlay-status{
