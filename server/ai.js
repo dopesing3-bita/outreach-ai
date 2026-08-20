@@ -85,7 +85,7 @@ that text. You may reorganize, rephrase, reorder, emphasize, and trim — but
 never add new factual content.`;
 
 // Determine what role/opportunity a recruiter is likely hiring for, using
-// only what Snov.io + the user gave us. If it's ambiguous, say so — the
+// only what SignalHire + the user gave us. If it's ambiguous, say so — the
 // caller then asks the user directly instead of guessing.
 async function detectRole({ recruiter, userJobTitle, userJobDescription }) {
   if (userJobTitle) {
@@ -113,7 +113,7 @@ Rules:
   const user = `SCHEMA:
 ${JSON.stringify(schema, null, 2)}
 
-RECRUITER INFO (from Snov.io / LinkedIn):
+RECRUITER INFO (from SignalHire / LinkedIn):
 ${JSON.stringify(recruiter, null, 2)}`;
 
   return jsonCompletion(system, user);
@@ -173,7 +173,7 @@ Additional rules:
 - Also produce 3 distinct, non-clickbait subject line options; "subject" is your top pick.
 - Return strict JSON only: {"subject_options": ["","",""], "subject": "", "body": ""}`;
 
-  const user = `RECRUITER (from Snov.io / LinkedIn):
+  const user = `RECRUITER (from SignalHire / LinkedIn):
 ${JSON.stringify(recruiter, null, 2)}
 
 TARGET COMPANY: ${company || "unknown"}

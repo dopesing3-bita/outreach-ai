@@ -15,7 +15,5 @@ services:
         sync: false
       - key: GEMINI_MODEL
         value: gemini-2.5-flash
-      - key: SNOV_API_USER_ID
-        sync: false
-      - key: SNOV_API_SECRET
+      - key: SIGNALHIRE_API_KEY
         sync: false

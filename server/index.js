@@ -5,7 +5,7 @@ const express = require("express");
 const cors = require("cors");
 const multer = require("multer");
 
-const snov = require("./snov");
+const signalhire = require("./signalhire");
 const ai = require("./ai");
 const { extractResumeText } = require("./resumeParser");
 const { buildResumePdfBuffer, buildResumeDocxBuffer } = require("./resumeBuilder");
@@ -62,7 +62,8 @@ function isValidLinkedinUrl(url) {
 app.get("/healthz", (req, res) => res.json({ ok: true }));
 
 // ------------------------------------------------------------------
-// STEP 1: Analyze recruiter — LinkedIn URL -> Snov.io enrichment/email.
+// STEP 1: Analyze recruiter — LinkedIn URL -> SignalHire profile/email.
+// SignalHire is the ONLY source of the recipient email (see server/signalhire.js).
 // ------------------------------------------------------------------
 app.post("/api/find-recruiter", async (req, res) => {
   const { linkedin_url } = req.body || {};
@@ -74,7 +75,7 @@ app.post("/api/find-recruiter", async (req, res) => {
   try {
     let profile;
     try {
-      profile = await snov.enrichLinkedinProfile(linkedin_url);
+      profile = await signalhire.findPersonByLinkedinUrl(linkedin_url);
     } catch (e) {
       return res.status(502).json({
         error: "We couldn't retrieve this LinkedIn profile. Please verify the URL.",
@@ -82,23 +83,8 @@ app.post("/api/find-recruiter", async (req, res) => {
       });
     }
 
-    if (!profile || (!profile.full_name && !profile.email)) {
+    if (!profile || !profile.full_name) {
       return res.status(404).json({ error: "We couldn't retrieve this LinkedIn profile. Please verify the URL." });
-    }
-
-    if (!profile.email) {
-      const domain = snov.extractDomain(profile.company_site) || null;
-      if (domain) {
-        try {
-          profile.email = await snov.findEmailByDomain({
-            firstName: profile.first_name,
-            lastName: profile.last_name,
-            domain,
-          });
-        } catch {
-          // Non-fatal — proceed without an email.
-        }
-      }
     }
 
     const sessionId = newSession();

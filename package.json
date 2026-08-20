@@ -1,7 +1,7 @@
 {
   "name": "ai-hiring-outreach-agent",
   "version": "3.0.0",
-  "description": "AI Hiring Manager Outreach Agent — LinkedIn URL -> Snov.io recruiter/email lookup -> Gemini resume tailoring + outreach email -> Gmail compose. Render-deployed.",
+  "description": "AI Hiring Manager Outreach Agent — LinkedIn URL -> SignalHire recruiter/email lookup -> Gemini resume tailoring + outreach email -> Gmail compose. Render-deployed.",
   "main": "server/index.js",
   "type": "commonjs",
   "scripts": {
