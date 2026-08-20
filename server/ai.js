@@ -21,25 +21,47 @@ function getClient() {
   return _client;
 }
 
+const RETRY_DELAYS_MS = [2000, 5000, 10000]; // ~2s, 5s, 10s exponential backoff
+function isRetryableGeminiError(e) {
+  const status = e && e.status;
+  const code = e && (e.code || (e.error && e.error.code));
+  const statusText = String((e && (e.error?.status)) || "");
+  return status === 503 || code === 503 || statusText === "UNAVAILABLE";
+}
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 async function jsonCompletion(systemPrompt, userPrompt) {
   const client = getClient();
 
   let result;
-  try {
-    result = await client.models.generateContent({
-      model: MODEL_NAME,
-      contents: userPrompt,
-      config: {
-        systemInstruction: systemPrompt,
-        temperature: 0.2,
-        responseMimeType: "application/json",
-      },
-    });
-  } catch (e) {
-    // Surface the real Gemini error (status/message) to server logs without
-    // leaking the API key. e.message from @google/genai already excludes it.
-    console.error("[ai.js] Gemini request failed:", e.status || "", e.message);
-    throw new Error("Gemini request failed: " + e.message);
+  let attempt = 0;
+  while (true) {
+    try {
+      result = await client.models.generateContent({
+        model: MODEL_NAME,
+        contents: userPrompt,
+        config: {
+          systemInstruction: systemPrompt,
+          temperature: 0.2,
+          responseMimeType: "application/json",
+        },
+      });
+      break;
+    } catch (e) {
+      // Surface the real Gemini error (status/message) to server logs without
+      // leaking the API key. e.message from @google/genai already excludes it.
+      console.error("[ai.js] Gemini request failed:", e.status || "", e.message);
+      if (isRetryableGeminiError(e) && attempt < RETRY_DELAYS_MS.length) {
+        const delay = RETRY_DELAYS_MS[attempt];
+        console.error(`[ai.js] Gemini 503/UNAVAILABLE — retrying in ${delay}ms (attempt ${attempt + 1}/${RETRY_DELAYS_MS.length})`);
+        await sleep(delay);
+        attempt++;
+        continue;
+      }
+      throw new Error("Gemini request failed: " + e.message);
+    }
   }
 
   const text = result.text;
