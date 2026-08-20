@@ -1,7 +1,15 @@
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+const { GoogleGenAI } = require("@google/genai");
 
 const MODEL_NAME = process.env.GEMINI_MODEL || "gemini-2.5-flash";
 
+// NOTE: this project previously used the "@google/generative-ai" package.
+// That package (google-gemini/deprecated-generative-ai-js) was officially
+// deprecated and its end-of-life (bug-fix support cut off) was
+// November 30, 2025 — Google's recommended replacement is "@google/genai".
+// This is the root cause of the "AI is temporarily unavailable" failures:
+// the old SDK is no longer reliable against the current Gemini API.
+// We use the same env vars (GEMINI_API_KEY, GEMINI_MODEL) and the same
+// function signatures below, so nothing else in the app needs to change.
 let _client = null;
 function getClient() {
   if (!process.env.GEMINI_API_KEY) {
@@ -9,23 +17,37 @@ function getClient() {
       "GEMINI_API_KEY is not set. Add it to your server environment (see .env.example) and restart the app. Get one at https://aistudio.google.com/apikey"
     );
   }
-  if (!_client) _client = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+  if (!_client) _client = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
   return _client;
 }
 
 async function jsonCompletion(systemPrompt, userPrompt) {
   const client = getClient();
-  const model = client.getGenerativeModel({
-    model: MODEL_NAME,
-    systemInstruction: systemPrompt,
-    generationConfig: {
-      temperature: 0.2,
-      responseMimeType: "application/json",
-    },
-  });
 
-  const result = await model.generateContent(userPrompt);
-  const text = result.response.text();
+  let result;
+  try {
+    result = await client.models.generateContent({
+      model: MODEL_NAME,
+      contents: userPrompt,
+      config: {
+        systemInstruction: systemPrompt,
+        temperature: 0.2,
+        responseMimeType: "application/json",
+      },
+    });
+  } catch (e) {
+    // Surface the real Gemini error (status/message) to server logs without
+    // leaking the API key. e.message from @google/genai already excludes it.
+    console.error("[ai.js] Gemini request failed:", e.status || "", e.message);
+    throw new Error("Gemini request failed: " + e.message);
+  }
+
+  const text = result.text;
+  if (!text) {
+    console.error("[ai.js] Gemini returned no text. Full response:", JSON.stringify(result).slice(0, 500));
+    throw new Error("AI returned an empty response.");
+  }
+
   try {
     return JSON.parse(text);
   } catch (e) {

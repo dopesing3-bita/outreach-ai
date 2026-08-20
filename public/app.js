@@ -368,7 +368,6 @@ function setError(id, msg) {
   $(id).textContent = msg || '';
 }
 
-document.getElementById("enterAppBtn").addEventListener("click", (e) => { e.preventDefault(); showPanel(1); });
 // ---- Step 1: find recruiter ----
 $('btnFindRecruiter').addEventListener('click', async () => {
   setError('err-1', '');

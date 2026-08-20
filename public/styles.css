@@ -203,7 +203,7 @@ section{position:relative;z-index:1;}
   max-width:900px;
 }
 .cinema-frame#enterAppBtn{margin-top:30px;}
-.cinema-frame .cta-primary{margin-top:34px;}
+.cinema-frame .cta-primary{margin-top:34px;pointer-events:auto;}
 
 .scroll-hint{
   position:absolute;
@@ -432,7 +432,6 @@ section{position:relative;z-index:1;}
   backdrop-filter:blur(6px);
   display:flex;align-items:center;justify-content:center;
 }
-.overlay[hidden]{display:none;}
 #network-canvas{position:absolute;inset:0;width:100%;height:100%;}
 .overlay-inner{position:relative;text-align:center;z-index:2;}
 .overlay-status{

@@ -11,7 +11,7 @@
     "node": ">=20"
   },
   "dependencies": {
-    "@google/generative-ai": "^0.21.0",
+    "@google/genai": "^2.18.0",
     "axios": "^1.7.7",
     "cors": "^2.8.5",
     "docx": "^9.0.2",
