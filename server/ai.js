@@ -1,6 +1,6 @@
 const { GoogleGenAI } = require("@google/genai");
 
-const MODEL_NAME = process.env.GEMINI_MODEL || "gemini-2.5-flash";
+const MODEL_NAME = process.env.GEMINI_MODEL || "gemini-3.6-flash";
 
 // NOTE: this project previously used the "@google/generative-ai" package.
 // That package (google-gemini/deprecated-generative-ai-js) was officially
